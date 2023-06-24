@@ -1,4 +1,4 @@
-# f7labs:email-resend
+# Resend Client Email
 
 `f7labs:email-resend` is a package that simplifies the process of sending emails using Meteor. It provides a plug-and-play integration with [Resend](https://resend.com/), leveraging the powerful email package from Meteor.
 
