@@ -1,12 +1,12 @@
-# f7:email-resend
+# f7labs:email-resend
 
-`f7:email-resend` is a package that simplifies the process of sending emails using Meteor. It provides a plug-and-play integration with [Resend](https://resend.com/), leveraging the powerful email package from Meteor.
+`f7labs:email-resend` is a package that simplifies the process of sending emails using Meteor. It provides a plug-and-play integration with [Resend](https://resend.com/), leveraging the powerful email package from Meteor.
 
 ## Installation
-To install `f7:email-resend`, simply execute the following command:
+To install `f7labs:email-resend`, simply execute the following command:
 
 ```sh
-meteor add f7:email-resend
+meteor add f7labs:email-resend
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ To get started quickly with using Resend as the email provider for Meteor, you o
 ```json
 {
   "packages": {
-    "f7:email-resend": {
+    "f7labs:email-resend": {
       "from": "noreply@yourdomain.com",
       "apiKey": "re_aAAaAAAA_0a0AaAAaAaAaaaaaAa0AaAAA"
     }
@@ -38,7 +38,7 @@ Alternatively, if you prefer to set the `from` field dynamically, you can do so 
 You can also use this package to send emails directly. Here's an example of how to do it:
 
 ```javascript
-import { sendEmail } from 'meteor/f7:email-resend';
+import { sendEmail } from 'meteor/f7labs:email-resend';
 
 Meteor.methods({
   sendReminderEmail({ to, subject, content }) {

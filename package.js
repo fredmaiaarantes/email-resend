@@ -1,7 +1,7 @@
 /* global Package Npm */
 
 Package.describe({
-  name: 'f7:email-resend',
+  name: 'f7labs:email-resend',
   summary: 'Resend email support',
   version: '0.0.1',
 });

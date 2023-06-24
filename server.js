@@ -6,7 +6,7 @@ import { Resend } from 'resend';
 // eslint-disable-next-line import/no-unresolved
 import {getSettings} from 'meteor/quave:settings';
 
-const PACKAGE_NAME = 'f7:email-resend';
+const PACKAGE_NAME = 'f7labs:email-resend';
 const settings = getSettings({packageName: PACKAGE_NAME}) || {};
 
 if (!settings.apiKey && !settings.devMode) {
