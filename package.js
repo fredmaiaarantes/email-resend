@@ -7,7 +7,7 @@ Package.describe({
 });
 
 Npm.depends({
-  resend: '^0.15.3',
+  resend: '0.15.3',
 });
 
 Package.onUse(api => {
