@@ -4,7 +4,7 @@ Package.describe({
   name: 'f7labs:email-resend',
   summary: 'Resend email support',
   version: '0.0.3',
-  git: 'https://github.com/fredmaiaarantes/email-resend.git',
+  git: 'https://github.com/fredmaiaarantes/email-resend',
   documentation: 'README.md',
 });
 
