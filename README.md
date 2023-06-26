@@ -33,15 +33,18 @@ To get started quickly with using Resend as the email provider for Meteor, you o
 
 Alternatively, if you prefer to set the `from` field dynamically, you can do so by either configuring it in the settings or by passing it as a prop when calling the email manually.
 
-### Code usage
+### Usage
+
+Automatically used when calling methods from the `Email` and `Accounts Password` packages. For example when calling Accounts functions as `Accounts.sendVerificationEmail()`, `Accounts.forgotPassword()`, `Accounts.sendResetPasswordEmail()`, and so on.
 
 You can also use this package to send emails directly. Here's an example of how to do it:
 
 ```javascript
+import { Meteor } from 'meteor/meteor';
 import { sendEmail } from 'meteor/f7labs:email-resend';
 
 Meteor.methods({
-  sendReminderEmail({ to, subject, content }) {
+  sendMyRandomEmail({ to, subject, content }) {
     sendEmail({
       to,
       subject,
