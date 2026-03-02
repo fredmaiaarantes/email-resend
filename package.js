@@ -1,9 +1,9 @@
 /* global Package Npm */
 
 Package.describe({
-  name: 'f7labs:email-resend',
+  name: 'fredericomaia:email-resend',
   summary: 'Resend Email Client',
-  version: '0.0.4',
+  version: '0.0.1',
   git: 'https://github.com/fredmaiaarantes/email-resend',
   documentation: 'README.md',
 });
