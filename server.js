@@ -1,63 +1,35 @@
-/* global Package */
-
 import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
 import { Resend } from 'resend';
-import { getSettings } from 'meteor/quave:settings';
 
-/**
- * Represents the name of the package.
- * @constant {string}
- */
-const PACKAGE_NAME = 'f7labs:email-resend';
+const getSettings = ({ packageName }) => ({
+  ...(Meteor.settings?.packages?.[packageName] || {}),
+  ...(Meteor.settings?.public?.packages?.[packageName] || {}),
+});
 
-/**
- * Represents the settings of the package.
- * @type {Object}
- */
-const settings = getSettings({packageName: PACKAGE_NAME}) || {};
+const PACKAGE_NAME = 'fredericomaia:email-resend';
+
+const settings = getSettings({packageName: PACKAGE_NAME});
 
 if (!settings.apiKey && !settings.devMode) {
-  /**
-   * Throws an error if the API key is missing and not in dev mode.
-   * @throws {Meteor.Error}
-   */
   throw new Meteor.Error(
     'email-resend: Settings are missing, "apiKey" is required.'
   );
 }
 
 /**
- * Creates a new Resend client instance.
- * @param {Object} options - The options for creating the client.
- * @param {string} options.apiKey - The API key for the client.
- * @returns {Resend} The Resend client instance.
- */
-export const createResendClient = ({apiKey}) => new Resend(apiKey);
-
-/**
- * Retrieves the Resend client instance.
- * @returns {Resend|Object} The Resend client instance or a mock object in dev mode.
+ * Returns the Resend client. In dev mode, returns a mock that logs emails to
+ * the console instead of sending them.
+ * @returns {{ emails: { send: Function } }}
  */
 export const getResendClient = () => {
   if (settings.devMode) {
-    /**
-     * Sends an email using the mock client in dev mode.
-     * @param {Object} options - The email options.
-     * @param {string} options.To - The recipient's email address.
-     * @param {string} options.Subject - The email subject.
-     * @param {string} options.HtmlBody - The HTML content of the email.
-     * @returns {Promise<void>} A promise that resolves when the email is sent.
-     */
     return {
-      sendEmail: ({
-                    To,
-                    Subject,
-                    HtmlBody,
-                  }) => {
-        console.log(PACKAGE_NAME, `${To}:${Subject}`)
-        console.log(PACKAGE_NAME, HtmlBody)
-        Promise.resolve();
+      emails: {
+        send: async ({ from, to, subject, html }) => {
+          console.log(`${PACKAGE_NAME} [devMode] ${from} -> ${to}: ${subject}`);
+          console.log(PACKAGE_NAME, html);
+        },
       },
     };
   }
@@ -65,15 +37,15 @@ export const getResendClient = () => {
 }
 
 /**
- * Sends an email using the Resend client.
- * @param {Object} options - The email options.
- * @param {string} options.to - The recipient's email address.
- * @param {string} options.subject - The email subject.
- * @param {string} options.content - The content of the email.
- * @param {string} [options.from] - The sender's email address.
- * @param {Resend} [options.resendClient] - The Resend client instance.
- * @returns {Promise<void>} A promise that resolves when the email is sent.
- * @throws {Meteor.Error} If the "from" address is not set.
+ * Sends an email via Resend.
+ * @param {Object} options
+ * @param {string} options.to - Recipient email address.
+ * @param {string} options.subject - Email subject.
+ * @param {string} options.content - HTML content of the email.
+ * @param {string} [options.from] - Sender address. Falls back to the `from` setting.
+ * @param {{ emails: { send: Function } }} [options.resendClient] - Override the Resend client.
+ * @returns {Promise<void>}
+ * @throws {Meteor.Error} If no `from` address is set.
  */
 export const sendEmail = async ({
                                   to,
@@ -90,27 +62,19 @@ export const sendEmail = async ({
     );
   }
 
-  try {
-    const response = await resend.emails.send({
-      from: from,
-      to: to,
-      subject: subject,
-      html: content
-    });
-    console.log(PACKAGE_NAME, { response });
-  } catch (error) {
-    console.error(PACKAGE_NAME, { error });
-  }
+  const response = await resend.emails.send({
+    from,
+    to,
+    subject,
+    html: content,
+  });
+  console.log(PACKAGE_NAME, { response });
 };
 
 /**
- * Overrides the custom transport function for sending emails using Resend.
- * @param {Object} options - The email options.
- * @param {string} options.to - The recipient's email address.
- * @param {string} options.subject - The email subject.
- * @param {string} [options.html] - The HTML content of the email.
- * @param {string} [options.text] - The plain text content of the email.
- * @returns {void}
+ * Meteor custom email transport. Invoked automatically by the `email` package
+ * for all outgoing emails, including Accounts password flows. Respects
+ * `Email.overrideOptionsBeforeSend` for per-send overrides.
  */
 Email.customTransport = options => {
   const {to, subject, html, text} = options;

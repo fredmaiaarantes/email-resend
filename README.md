@@ -1,12 +1,12 @@
 # Resend Client Email
 
-`f7labs:email-resend` is a package that simplifies the process of sending emails using Meteor. It provides a plug-and-play integration with [Resend](https://resend.com/), leveraging the powerful email package from Meteor.
+`fredericomaia:email-resend` is a package that simplifies the process of sending emails using Meteor. It provides a plug-and-play integration with [Resend](https://resend.com/), leveraging the powerful email package from Meteor.
 
 ## Installation
-To install `f7labs:email-resend`, simply execute the following command:
+To install `fredericomaia:email-resend`, simply execute the following command:
 
 ```sh
-meteor add f7labs:email-resend
+meteor add fredericomaia:email-resend
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ To get started quickly with using Resend as the email provider for Meteor, you o
 ```json
 {
   "packages": {
-    "f7labs:email-resend": {
+    "fredericomaia:email-resend": {
       "from": "noreply@yourdomain.com",
       "apiKey": "re_aAAaAAAA_0a0AaAAaAaAaaaaaAa0AaAAA"
     }
@@ -31,7 +31,12 @@ To get started quickly with using Resend as the email provider for Meteor, you o
 }
 ```
 
-Alternatively, if you prefer to set the `from` field dynamically, you can do so by either configuring it in the settings or by passing it as a prop when calling the email manually.
+| Setting | Required | Description |
+|---------|----------|-------------|
+| `apiKey` | Yes (unless `devMode`) | Your Resend API key |
+| `from` | No | Default sender address. Can be overridden per call. |
+| `devMode` | No | When `true`, emails are logged to the console instead of sent. `apiKey` is not required. |
+| `isVerbose` | No | When `true`, logs a success message after each email sent via `Email.customTransport`. |
 
 ### Usage
 
@@ -41,21 +46,16 @@ You can also use this package to send emails directly. Here's an example of how 
 
 ```javascript
 import { Meteor } from 'meteor/meteor';
-import { sendEmail } from 'meteor/f7labs:email-resend';
+import { sendEmail } from 'meteor/fredericomaia:email-resend';
 
 Meteor.methods({
-  sendMyRandomEmail({ to, subject, content }) {
-    sendEmail({
-      to,
-      subject,
-      content,
-    })
-      .then(() => {
-        console.log(`Email sent to ${to}`);
-      })
-      .catch(error => {
-        console.error(`Error sending email to ${to}`, error);
-      });
+  async sendMyRandomEmail({ to, subject, content }) {
+    try {
+      await sendEmail({ to, subject, content });
+      console.log(`Email sent to ${to}`);
+    } catch (error) {
+      console.error(`Error sending email to ${to}`, error);
+    }
   }
 });
 ```

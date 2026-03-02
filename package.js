@@ -18,7 +18,6 @@ Package.onUse(api => {
   api.use(['email'], ['server']);
 
   api.use('ecmascript');
-  api.use('quave:settings@1.0.0');
 
   api.mainModule('server.js', 'server');
 });
