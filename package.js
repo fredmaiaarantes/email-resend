@@ -13,7 +13,7 @@ Npm.depends({
 });
 
 Package.onUse(api => {
-  api.versionsFrom(['2.4', '3.0']);
+  api.versionsFrom('3.0');
 
   api.use(['email'], ['server']);
 

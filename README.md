@@ -63,7 +63,7 @@ Meteor.methods({
 You can optionally provide the `from` field in the `sendEmail` function if you haven't set it in the package settings.
 
 ### Limitations
-Please note that the Meteor `email` package needs to be in version 2.2 or above, which corresponds to Meteor version `2.4`.
+Requires Meteor 3.0 or above.
 
 ### License
 
