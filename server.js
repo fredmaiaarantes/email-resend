@@ -62,13 +62,16 @@ export const sendEmail = async ({
     );
   }
 
-  const response = await resend.emails.send({
+  const { data, error } = await resend.emails.send({
     from,
     to,
     subject,
     html: content,
   });
-  console.log(PACKAGE_NAME, { response });
+  if (error) {
+    throw new Meteor.Error(`${PACKAGE_NAME}: ${error.message}`);
+  }
+  console.log(PACKAGE_NAME, { data });
 };
 
 /**
@@ -76,24 +79,18 @@ export const sendEmail = async ({
  * for all outgoing emails, including Accounts password flows. Respects
  * `Email.overrideOptionsBeforeSend` for per-send overrides.
  */
-Email.customTransport = options => {
+Email.customTransport = async options => {
   const {to, subject, html, text} = options;
   const overrideOptions = Email.overrideOptionsBeforeSend
     ? Email.overrideOptionsBeforeSend(options)
     : {};
-  sendEmail({
+  await sendEmail({
     to,
     subject,
     content: html || text,
     ...overrideOptions,
-  })
-    .then(() => {
-      if (settings.isVerbose) {
-        // eslint-disable-next-line no-console
-        console.log(`${PACKAGE_NAME}: Email sent to ${to}`);
-      }
-    })
-    .catch(error => {
-      console.error(`${PACKAGE_NAME}: Error sending email to ${to}`, error);
-    });
+  });
+  if (settings.isVerbose) {
+    console.log(`${PACKAGE_NAME}: Email sent to ${to}`);
+  }
 };

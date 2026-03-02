@@ -9,11 +9,11 @@ Package.describe({
 });
 
 Npm.depends({
-  resend: '0.15.3',
+  resend: '6.9.3',
 });
 
 Package.onUse(api => {
-  api.versionsFrom('2.4');
+  api.versionsFrom(['2.4', '3.0']);
 
   api.use(['email'], ['server']);
 
